@@ -1,0 +1,61 @@
+<div ng-controller="CurrencyController as currencyController">
+    <div class="col-xs-2">
+        <h2>{{currencyController.title}}</h2>
+        <div class="checkbox" ng-repeat="currency in currencyController.currencies">
+            <label>
+                <input type="checkbox"
+                       ng-model="currency.isActive"
+                       ng-change="currencyController.change(currency)">
+                {{currency.name}}
+            </label>
+        </div>
+        <div class="checkbox disabled">
+            <label>
+                <input type="checkbox" value="" disabled>
+                Option two is disabled
+            </label>
+        </div>
+    </div>
+    <div class="col-xs-10">
+        <h2>Parameters</h2>
+        <div class="row">
+            <form class="form-inline" ng-submit="currencyController.getValues()">
+                <div class="form-group">
+                    <label>Provider</label>
+                    <select class="form-control" ng-model="currencyController.selectedProviderId">
+                        <option value="{{provider.id}}" ng-repeat="provider in currencyController.providers">
+                            {{provider.name}}
+                        </option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Base Currency</label>
+                    <select class="form-control" ng-model="currencyController.baseCurrencyId">
+                        <option value="{{currency.id}}"
+                                ng-repeat="currency in currencyController.currencies" ng-show="currency.isActive">
+                            {{currency.name}}
+                        </option>
+                    </select>
+                </div>
+                <button type="submit" class="btn btn-default">Get values</button>
+            </form>
+        </div>
+        <div class="row">
+            <table class="table table-striped table-hover" ng-show="currencyController.showResults()">
+                <tr>
+                    <th>Abbr</th>
+                    <th>Name</th>
+                    <th>Value</th>
+                    <th>Timestamp</th>
+                </tr>
+                <tr ng-repeat="value in currencyController.values"
+                    ng-show="currencyController.currencyIndex[value.valueCurrencyId].isActive">
+                    <td>{{currencyController.currencyIndex[value.valueCurrencyId].abbr}}</td>
+                    <td>{{currencyController.currencyIndex[value.valueCurrencyId].name}}</td>
+                    <td>{{value.value}}</td>
+                    <td>{{value.createdAt * 1000 | date:'yyyy-MM-dd HH:mm:ss Z'}}</td>
+                </tr>
+            </table>
+        </div>
+    </div>
+</div>

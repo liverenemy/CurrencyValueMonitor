@@ -1,0 +1,124 @@
+<?php
+/**
+ * @var Zend_View $this
+ */
+?>
+<!-- application/layouts/scripts/layout.phtml -->
+<?php echo $this->doctype() ?>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Sergey Cherdantsev's Test task</title>
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+
+    <!-- Optional theme -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap-theme.min.css">
+
+    <!-- jQuery -->
+    <script src="//code.jquery.com/jquery-1.11.3.min.js"></script>
+
+    <!-- Latest compiled and minified JavaScript -->
+    <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+
+    <!-- Angular JS -->
+    <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.4.3/angular.min.js"></script>
+
+
+    <script>
+        var app = angular.module('currency', []);
+
+        app.controller('CurrencyController', ['$http', '$scope', function($http, $scope){
+            var context = this;
+            this.title = 'Currencies';
+            context.currencies = [];
+            context.currencyIndex = {};
+            context.selectedProviderId = 0;
+            context.providers = [];
+            context.baseCurrencyId = 0;
+            context.values = [];
+            $http
+                .get('/currency/list')
+                .success(function(data) {
+                    context.currencies = data;
+                    if ((data instanceof Array) && (data.length != undefined)) {
+                        for (var i = 0; i < data.length; i++) {
+                            if (data[i].id == undefined) {
+                                continue;
+                            }
+                            var id = data[i].id;
+                            context.currencyIndex[id] = data[i];
+                        }
+                    }
+                })
+            ;
+            $http
+                .get('/provider/list')
+                .success(function(data) {
+                    context.providers = data;
+                })
+            ;
+
+            context.change = function(currency) {
+                var id = currency.id,
+                    isActive = currency.isActive ? 1 : 0
+                ;
+                jQuery.ajax('/currency/activate', {
+                    data: {
+                        'id': id,
+                        'isActive': isActive
+                    }
+                });
+            };
+
+            context.getValues = function() {
+                var
+                    currency = context.baseCurrencyId,
+                    provider = context.selectedProviderId
+                    ;
+                jQuery.ajax('/provider/one', {
+                    data: {
+                        'provider': provider,
+                        'baseCurrency': currency
+                    },
+                    success: function(data) {
+                        $scope.$apply(function(){
+                            context.values = data;
+                        });
+                    }
+                });
+            };
+
+            context.showResults = function() {
+                return context.values.length > 0;
+            };
+        }]);
+    </script>
+</head>
+<body ng-app="currency">
+<nav class="navbar navbar-default">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <button type="button"
+                    class="navbar-toggle collapsed"
+                    data-toggle="collapse"
+                    data-target="#bs-example-navbar-collapse-1"
+                    aria-expanded="false">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">Sergey Cherdantsev's Currency Values</a>
+        </div>
+    </div>
+</nav>
+<div class="container-fluid">
+    <div class="row">
+        <?php echo $this->layout()->content ?>
+    </div>
+</div>
+
+
+</body>
+</html>

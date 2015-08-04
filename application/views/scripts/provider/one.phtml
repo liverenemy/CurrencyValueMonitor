@@ -1,0 +1,28 @@
+<?php
+/**
+ * @var Application_Model_Currency          $baseCurrency
+ * @var Application_Model_CurrencyValue[]   $values
+ * @var Application_Model_Provider_Abstract $provider
+ * @var Zend_View_Abstract                  $this
+ */
+$baseCurrency   = $this->baseCurrency;
+$provider       = $this->provider;
+$values         = $this->values;
+?>
+<p>
+    <?php print_r($this->baseCurrency); ?>
+</p>
+<p>
+    <?php print_r($this->provider); ?>
+</p>
+<p>
+    <?php if (!empty($values) && is_array($values) && count($values)): ?>
+        <?php
+        $results = [];
+        foreach ($values as $value) {
+            $results[] = Zend_Json::encode($value);
+        }
+        ?>
+        <?php echo Zend_Json::prettyPrint(Zend_Json::encode($results)); ?>
+    <?php endif ?>
+</p>

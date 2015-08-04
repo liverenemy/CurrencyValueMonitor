@@ -1,0 +1,26 @@
+<?php
+
+/**
+ * @var Zend_View $this
+ * @var Application_Model_Provider_Abstract $entry
+ */
+
+?>
+<!-- application/views/scripts/provider/index.phtml -->
+Providers: <br />
+<dl>
+	<?php foreach ($this->entries as $entry): ?>
+		<dt><?php echo get_class($entry) ?></dt>
+		<dd>
+			<?php echo $this->escape($entry->name) ?>
+			<?php if ($entry->isActive): ?>
+				(active)
+			<?php else: ?>
+				(not active)
+			<?php endif ?>
+            <?php if (!empty($this->baseCurrency)) : ?>
+			    <?php print_r ($entry->getValues($this->baseCurrency)); ?>
+            <?php endif ?>
+		</dd>
+	<?php endforeach ?>
+</dl>
