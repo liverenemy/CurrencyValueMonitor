@@ -40,7 +40,9 @@ class Application_Model_Provider_European_Central_Bank extends Application_Model
 
         $XML=simplexml_load_file("http://www.ecb.europa.eu/stats/eurofxref/eurofxref-daily.xml");
 
-        $data = [];
+        $data = [
+            $this->_baseCurrencyAbbr => 1,
+        ];
 
         foreach($XML->Cube->Cube->Cube as $rate){
             $abbr = (string) $rate['currency'];
