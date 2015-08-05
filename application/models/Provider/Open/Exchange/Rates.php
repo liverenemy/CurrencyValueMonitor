@@ -61,9 +61,7 @@ class Application_Model_Provider_Open_Exchange_Rates extends Application_Model_P
             $currencyValue->value = $exchangeRates->rates->$abbr / $coefficient;
             $currencyValue->providerId = $this->id;
             $currencyValueMapper->save($currencyValue);
-            if ($currency->isActive) {
-                $result[] = $currencyValue;
-            }
+            $result[] = $currencyValue;
         }
 
         return $result;

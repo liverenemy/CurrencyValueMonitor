@@ -67,6 +67,12 @@
                     data: {
                         'id': id,
                         'isActive': isActive
+                    },
+                    success: function(data) {
+                        $scope.$apply(function(){
+                            // Specially for AngularJS
+                            currency.isActive = !!currency.isActive;
+                        });
                     }
                 });
             };
