@@ -18,7 +18,8 @@ class ProviderController extends Zend_Controller_Action
                 'baseCurrency' => $currencies[0],
             ]);
         }
-        $this->view->entries = $providerMapper->fetchAll();
+        $providers = $providerMapper->fetchAll();
+        $this->view->entries = $providers;
     }
 
     public function listAction()

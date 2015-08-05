@@ -24,82 +24,8 @@
     <!-- Angular JS -->
     <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.4.3/angular.min.js"></script>
 
-
-    <script>
-        var app = angular.module('currency', []);
-
-        app.controller('CurrencyController', ['$http', '$scope', function($http, $scope){
-            var context = this;
-            this.title = 'Currencies';
-            context.currencies = [];
-            context.currencyIndex = {};
-            context.selectedProviderId = 0;
-            context.providers = [];
-            context.baseCurrencyId = 0;
-            context.values = [];
-            $http
-                .get('/currency/list')
-                .success(function(data) {
-                    context.currencies = data;
-                    if ((data instanceof Array) && (data.length != undefined)) {
-                        for (var i = 0; i < data.length; i++) {
-                            if (data[i].id == undefined) {
-                                continue;
-                            }
-                            var id = data[i].id;
-                            context.currencyIndex[id] = data[i];
-                        }
-                    }
-                })
-            ;
-            $http
-                .get('/provider/list')
-                .success(function(data) {
-                    context.providers = data;
-                })
-            ;
-
-            context.change = function(currency) {
-                var id = currency.id,
-                    isActive = currency.isActive ? 1 : 0
-                ;
-                jQuery.ajax('/currency/activate', {
-                    data: {
-                        'id': id,
-                        'isActive': isActive
-                    },
-                    success: function(data) {
-                        $scope.$apply(function(){
-                            // Specially for AngularJS
-                            currency.isActive = !!currency.isActive;
-                        });
-                    }
-                });
-            };
-
-            context.getValues = function() {
-                var
-                    currency = context.baseCurrencyId,
-                    provider = context.selectedProviderId
-                    ;
-                jQuery.ajax('/provider/one', {
-                    data: {
-                        'provider': provider,
-                        'baseCurrency': currency
-                    },
-                    success: function(data) {
-                        $scope.$apply(function(){
-                            context.values = data;
-                        });
-                    }
-                });
-            };
-
-            context.showResults = function() {
-                return context.values.length > 0;
-            };
-        }]);
-    </script>
+    <!-- App script -->
+    <script src="/js/app.js"></script>
 </head>
 <body ng-app="currency">
 <nav class="navbar navbar-default">
