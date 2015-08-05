@@ -8,6 +8,11 @@ class ProviderController extends Zend_Controller_Action
         /* Initialize action controller here */
     }
 
+    public function diagramAction()
+    {
+        // action body
+    }
+
     public function indexAction()
     {
         $providerMapper = new Application_Model_ProviderMapper();
